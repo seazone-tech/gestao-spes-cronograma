@@ -1,0 +1,593 @@
+<title>Gestão SPEs — Repactuação de Cronograma</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap">
+<style>
+:root {
+  --navy:    #0e2444;
+  --navy2:   #163260;
+  --teal:    #0c9a8a;
+  --teal2:   #0bd4be;
+  --amber:   #d97706;
+  --purple:  #7c3aed;
+  --green:   #16a34a;
+  --red:     #dc2626;
+  --blue:    #2563eb;
+  --bg:      #f1f5f9;
+  --card:    #ffffff;
+  --border:  #e2e8f0;
+  --text:    #0f172a;
+  --muted:   #64748b;
+  --faint:   #94a3b8;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg:    #0b1320;
+    --card:  #112240;
+    --border:#1e3558;
+    --text:  #e2eaf5;
+    --muted: #8fa3be;
+    --faint: #607090;
+  }
+}
+:root[data-theme="dark"] {
+  --bg:    #0b1320;
+  --card:  #112240;
+  --border:#1e3558;
+  --text:  #e2eaf5;
+  --muted: #8fa3be;
+  --faint: #607090;
+}
+
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+html { font-size: 14px; }
+body {
+  font-family: 'Inter', system-ui, -apple-system, sans-serif;
+  background: var(--bg);
+  color: var(--text);
+  line-height: 1.5;
+}
+
+/* HEADER */
+.header {
+  background: var(--navy);
+  color: #fff;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 24px;
+  height: 52px;
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  box-shadow: 0 2px 12px rgba(0,0,0,.35);
+}
+.header-left { display: flex; align-items: center; gap: 12px; }
+.logo-dot { width: 8px; height: 8px; border-radius: 50%; background: var(--teal2); flex-shrink:0; }
+.header-title { font-size: 13px; font-weight: 700; letter-spacing: .06em; text-transform: uppercase; color: #fff; }
+.header-sub { font-size: 11px; color: rgba(255,255,255,.45); font-weight: 400; }
+.header-right { display: flex; align-items: center; gap: 8px; }
+.stamp { font-size: 11px; color: rgba(255,255,255,.5); font-variant-numeric: tabular-nums; }
+.btn-hdr {
+  font-size: 11px; font-weight: 600;
+  padding: 5px 10px; border-radius: 6px;
+  background: rgba(255,255,255,.12);
+  border: 1px solid rgba(255,255,255,.2);
+  color: #fff; cursor: pointer;
+  transition: background .15s; white-space:nowrap;
+}
+.btn-hdr:hover { background: rgba(255,255,255,.22); }
+.btn-hdr.edit-on { background: rgba(11,212,190,.25); border-color: var(--teal2); }
+
+/* SUMMARY BAR */
+.summary {
+  background: var(--card);
+  border-bottom: 1px solid var(--border);
+  padding: 8px 24px;
+  display: flex; gap: 16px; align-items: center; flex-wrap: wrap;
+  font-size: 12px; color: var(--muted);
+}
+.summary strong { color: var(--text); font-variant-numeric: tabular-nums; }
+.summary-pill {
+  display: inline-flex; align-items: center; gap: 5px;
+  padding: 3px 8px; border-radius: 4px;
+  font-size: 11px; font-weight: 600; letter-spacing: .03em;
+}
+.pill-age { background: rgba(217,119,6,.12);   color: var(--amber);  }
+.pill-ago { background: rgba(12,154,138,.12);  color: var(--teal);   }
+.pill-std { background: rgba(124,58,237,.12);  color: var(--purple); }
+.edit-hint { font-size:11px; color: var(--faint); margin-left:auto; }
+
+/* TABLE WRAPPER */
+.wrap { overflow-x: auto; padding: 16px 24px 40px; }
+table {
+  width: 100%; border-collapse: collapse;
+  background: var(--card);
+  border-radius: 10px; overflow: hidden;
+  box-shadow: 0 1px 4px rgba(0,0,0,.06);
+  border: 1px solid var(--border);
+}
+thead tr { background: var(--navy2); color: rgba(255,255,255,.85); }
+th {
+  padding: 10px 12px;
+  font-size: 11px; font-weight: 600;
+  letter-spacing: .06em; text-transform: uppercase;
+  text-align: left; white-space: nowrap;
+}
+th.c-num    { width: 36px; text-align: center; }
+th.c-emp    { min-width: 180px; }
+th.c-tipo   { width: 80px; }
+th.c-data   { width: 110px; }
+th.c-crono  { width: 180px; }
+th.c-analise{ min-width: 220px; }
+th.c-status { width: 110px; text-align: center; }
+
+tbody tr { border-top: 1px solid var(--border); transition: background .1s; }
+tbody tr:hover { background: rgba(12,154,138,.03); }
+tbody tr.row-old { background: rgba(220,38,38,.03); }
+tbody tr.row-edited { box-shadow: inset 3px 0 0 var(--blue); }
+
+td { padding: 10px 12px; vertical-align: top; font-size: 13px; }
+td.c-num { text-align: center; color: var(--faint); font-size: 12px; font-variant-numeric: tabular-nums; }
+td.c-emp { font-weight: 600; font-size: 13px; }
+
+/* EDITABLE CELLS */
+[contenteditable] {
+  outline: none; border-radius: 4px;
+  transition: background .12s, box-shadow .12s;
+  cursor: text;
+}
+[contenteditable]:focus {
+  background: rgba(37,99,235,.07);
+  box-shadow: 0 0 0 2px rgba(37,99,235,.3);
+  padding: 2px 4px; margin: -2px -4px;
+}
+body:not(.edit-mode) [contenteditable] { pointer-events: none; cursor: default; }
+body.edit-mode [contenteditable] { pointer-events: auto; }
+body.edit-mode [contenteditable]:hover:not(:focus) {
+  background: rgba(37,99,235,.04);
+  box-shadow: 0 0 0 1px rgba(37,99,235,.18);
+}
+
+/* EMP CELL */
+.emp-name { display: block; }
+.mtg-name {
+  display: block; font-size: 11px; color: var(--muted);
+  font-weight: 400; margin-top: 2px;
+  max-width: 220px;
+}
+.folder-link {
+  display: inline-flex; align-items: center; gap: 4px;
+  font-size: 11px; color: var(--teal); font-weight: 500;
+  text-decoration: none; margin-top: 3px; opacity: .8;
+}
+.folder-link:hover { opacity: 1; }
+.emp-actions { display:flex; align-items:center; gap:6px; margin-top:4px; }
+.btn-reset {
+  font-size: 10px; padding: 2px 6px; border-radius: 4px;
+  border: 1px solid var(--border); background: transparent;
+  color: var(--muted); cursor: pointer;
+  transition: all .12s; display:none;
+}
+body.edit-mode .btn-reset { display: inline-block; }
+.btn-reset:hover { border-color: var(--red); color: var(--red); }
+.edited-dot {
+  width:6px; height:6px; border-radius:50%; background:var(--blue);
+  flex-shrink:0; display:none;
+}
+.row-edited .edited-dot { display:inline-block; }
+
+/* TIPO BADGE */
+.badge {
+  display: inline-block; padding: 3px 8px; border-radius: 4px;
+  font-size: 11px; font-weight: 700; letter-spacing: .04em;
+  transition: transform .1s;
+}
+.b-age { background: rgba(217,119,6,.14);  color: var(--amber);  }
+.b-ago { background: rgba(12,154,138,.14); color: var(--teal);   }
+.b-std { background: rgba(124,58,237,.14); color: var(--purple); }
+.b-outro { background: rgba(100,116,139,.12); color: var(--muted); }
+body.edit-mode .badge { cursor: pointer; }
+body.edit-mode .badge:hover { transform: scale(1.08); }
+body.edit-mode .badge::after { content: ' ↻'; font-size:9px; opacity:.6; }
+
+/* DATA */
+td.c-data {
+  font-variant-numeric: tabular-nums;
+  font-size: 12px; color: var(--muted); white-space: nowrap;
+}
+.data-old { color: var(--red); font-weight: 600; }
+
+/* CRONOGRAMA */
+.crono-cell { position: relative; }
+.crono-drop {
+  width: 160px; height: 90px;
+  border: 2px dashed var(--border); border-radius: 6px;
+  display: flex; flex-direction: column;
+  align-items: center; justify-content: center;
+  gap: 4px; cursor: pointer;
+  transition: border-color .15s, background .15s;
+  font-size: 11px; color: var(--faint); text-align: center;
+  background: rgba(0,0,0,.01); overflow: hidden; position: relative;
+}
+.crono-drop:hover { border-color: var(--teal); color: var(--teal); background: rgba(12,154,138,.04); }
+.crono-drop img {
+  position: absolute; inset: 0;
+  width: 100%; height: 100%; object-fit: cover; border-radius: 4px; cursor: pointer;
+}
+.crono-drop input[type=file] {
+  position: absolute; inset: 0; opacity: 0; cursor: pointer;
+  width: 100%; height: 100%;
+}
+.crono-icon { font-size: 18px; line-height: 1; }
+.crono-del {
+  position: absolute; top: 3px; right: 3px;
+  background: rgba(220,38,38,.85); color: #fff;
+  border: none; border-radius: 3px;
+  font-size: 10px; font-weight: 700;
+  padding: 1px 5px; cursor: pointer; display: none; z-index: 2;
+}
+.crono-drop:hover .crono-del { display: block; }
+
+/* ANÁLISE PMO */
+.analise-ta {
+  width: 100%; min-height: 60px; resize: vertical;
+  border: 1px solid var(--border); border-radius: 6px;
+  padding: 7px 9px; font-family: inherit; font-size: 12px;
+  color: var(--text); background: var(--bg);
+  transition: border-color .15s; line-height: 1.5;
+}
+.analise-ta:focus { outline: none; border-color: var(--teal); }
+.analise-ta::placeholder { color: var(--faint); }
+
+/* STATUS */
+td.c-status { vertical-align: middle; }
+.status-group { display: flex; gap: 6px; justify-content: center; }
+.st-btn {
+  display: inline-flex; align-items: center; justify-content: center;
+  width: 40px; height: 32px; border-radius: 6px;
+  border: 1.5px solid var(--border); cursor: pointer;
+  font-size: 16px; background: transparent; transition: border-color .15s, background .15s;
+}
+.st-btn:hover { border-color: var(--faint); }
+.st-ok.active  { background: rgba(22,163,74,.12);  border-color: var(--green); }
+.st-nok.active { background: rgba(220,38,38,.12); border-color: var(--red); }
+
+@media print {
+  .header { position: static; }
+  .btn-hdr { display: none; }
+  .crono-drop input[type=file] { display: none; }
+  .analise-ta { border: 1px solid #ccc; }
+  .folder-link { display: none; }
+}
+</style>
+
+<div class="header">
+  <div class="header-left">
+    <div class="logo-dot"></div>
+    <span class="header-title">PMO Seazone</span>
+    <span class="header-sub">— Gestão SPEs · Última repactuação de cronograma por empreendimento</span>
+  </div>
+  <div class="header-right">
+    <span class="stamp" id="stamp"></span>
+    <button class="btn-hdr" id="btn-edit" onclick="toggleEdit()">✏️ Editar linhas</button>
+    <button class="btn-hdr" onclick="window.print()">⎙ Imprimir</button>
+  </div>
+</div>
+
+<div class="summary">
+  <span>Total: <strong id="s-total">0</strong> empreendimentos</span>
+  <span class="summary-pill pill-age"><span id="s-age">0</span> AGE</span>
+  <span class="summary-pill pill-ago"><span id="s-ago">0</span> AGO</span>
+  <span class="summary-pill pill-std"><span id="s-std">0</span> STD</span>
+  <span class="edit-hint" id="edit-hint">Clique em "Editar linhas" para modificar qualquer campo</span>
+</div>
+
+<div class="wrap">
+<table id="tbl">
+  <thead>
+    <tr>
+      <th class="c-num">#</th>
+      <th class="c-emp">Empreendimento / Reunião</th>
+      <th class="c-tipo">Tipo</th>
+      <th class="c-data">Data</th>
+      <th class="c-crono">Cronograma</th>
+      <th class="c-analise">Análise PMO</th>
+      <th class="c-status">Status</th>
+    </tr>
+  </thead>
+  <tbody id="tbody"></tbody>
+</table>
+</div>
+
+<script>
+const DATA = [
+  ["Barra Grande Spot","01- Assembleia Geral Extraordinária 07/2026","16/07/2026","https://drive.google.com/drive/folders/1x41m1WF1VZ8imPZ-bcR9_DY6zjtKGzqX"],
+  ["Barra Spot","14 - Assembleia Extraordinária 02/07/2026","02/07/2026","https://drive.google.com/drive/folders/1YoyQc_DvpVe07EKT19k2gGzqPxgMzVR7"],
+  ["Batel Spot","06- Assembleia Geral Extraordinária 06/08/2026","06/08/2026","https://drive.google.com/drive/folders/1jVllfBuesPAXNymmmZwYi4QfldYkyNIs"],
+  ["Bonito Spot","01 - Assembleia 23/04/2026","23/04/2026","https://drive.google.com/drive/folders/1TxWVvHI8cfjD8RAjhm_GdykGyQljI-Fg"],
+  ["Bonito Spot II","Assembleia Ordinária 04/2026","04/2026",""],
+  ["Cachoeira Beach Spot","00 - Assembleia 23/06/2025","23/06/2025","https://drive.google.com/drive/folders/12WBEog9tsxr_B_I_hvvv23ytKJv1II9E"],
+  ["Cachoeira Spot","AGO 26","20/03/2026","https://drive.google.com/drive/folders/1jiRkO2FA_WCBA3x1TsqTzMTeRG-cQ5JN"],
+  ["Canas Beach Spot","01 - Assembleia Extraordinária 21/05/2026","21/05/2026","https://drive.google.com/drive/folders/18-Snl1jJFmSJpTyMQumw3KJ_98HxrHdN"],
+  ["Caragua Spot","04- Sessão Tira Dúvidas 05/2026","05/2026",""],
+  ["Foz Spot","01 - Assembleia Extraordinária 19/05/2026","19/05/2026","https://drive.google.com/drive/folders/1UjkNp3t0GlhmIjYmQIZsD8KTVgxvVnDX"],
+  ["Ilha do Campeche II Spot","00 - Assembleia 11/06/2025","11/06/2025","https://drive.google.com/drive/folders/1z8zKxfMhoj4oKthryzJn0dvQyDxYwHF-"],
+  ["Ilha do Campeche Spot","05 - Assembleia Extraordinária 17/03/2026","17/03/2026","https://drive.google.com/drive/folders/1jCUKuDWw1RnS4mHpTALKWVDqT8lY9QSH"],
+  ["Imbassaí Spot","07 - Assembleia Extraordinária 07/05/2026","07/05/2026","https://drive.google.com/drive/folders/1t4eqCOStuVFe0b0-afohh0n2mfM3GVhl"],
+  ["Ingleses Spot","10 - Assembleia Ordinária 03/06/2026","03/06/2026","https://drive.google.com/drive/folders/12yZCD1O5TAYeQZImil2SGPokV7NKb7FH"],
+  ["Japaratinga Spot","07 - Assembleia 12/05/2026","12/05/2026","https://drive.google.com/drive/folders/1dRm_y3pwuD9LiUss0pLZ_EFN-lgD46xl"],
+  ["Jurerê Beach Spot","00 - Assembleia Ordinária 18/12/2024","18/12/2024","https://drive.google.com/drive/folders/1C25dKWqspKtNSmXovFUbRieMqazfnq3V"],
+  ["Jurerê Spot","02 - Assembleia Ordinária 22/02/2024","22/02/2024","https://drive.google.com/drive/folders/1PY2sgpAMRgrmUp2IOaxxxGg8hquKufgA"],
+  ["Jurerê Spot III","Assembleia Ordinária 04/2026","04/2026",""],
+  ["Lagoa Spot","01 - Encaminhamento Assembleia 27/01/2022","27/01/2022","https://drive.google.com/drive/folders/1DySfd_3kb70cAA0MgUKZG_UKgfoqJ3g4"],
+  ["Marista 144 Spot","01 - Assembleia Ordinária 04/2026","30/04/2026","https://drive.google.com/drive/folders/17dqOEw4DiaVreSaW4nzYaTVttr2rGRyr"],
+  ["Meireles Spot","01 - Assembleia Ordinária 30/06/2026","30/06/2026","https://drive.google.com/drive/folders/1qBOu74BLDci5Uv1NrDwDAkCwHPDmiB0x"],
+  ["Morro das Pedras Spot","00 - Assembleia 02/04/2025","02/04/2025","https://drive.google.com/drive/folders/11nKWS8-izBMHUE_8ZekrRWCCJ8ZcnVVL"],
+  ["Natal Spot","Assembleia Ordinária 04/2026","04/2026",""],
+  ["Novo Campeche Spot","01 - Assembleia Ordinária 04/2026","04/2026",""],
+  ["Penha Spot","02 - Assembleia Ordinária 17/12/2024","17/12/2024","https://drive.google.com/drive/folders/1DxmcaXUMbtIGklaZXyZSibiHI2Sj7hcB"],
+  ["Ponta das Canas Spot","00 - AGE 28/04/2026","28/04/2026","https://drive.google.com/drive/folders/1ihbksaPhhApOue5XKYK_ttE945HCxOKK"],
+  ["Rosa Norte Spot","04 - Assembleia Geral Extraordinária 04/08/2026","04/08/2026","https://drive.google.com/drive/folders/1m9lSwT-CqoV8kpOS49jXDfOqZyldcI26"],
+  ["Rosa Spot","13 - Assembleia Geral Extraordinária 28/07/2026","28/07/2026","https://drive.google.com/drive/folders/1OBsaoXEoGxUEtqwoH6qE39MY-w93qfyu"],
+  ["Salvador Spot","03 - Assembleia 06/04/2026","06/04/2026","https://drive.google.com/drive/folders/1pXt74VDC_pRMbAq8dRo9DLzdS_fuWhph"],
+  ["Santinho Spot","02 - AGE 24/03/2026","24/03/2026","https://drive.google.com/drive/folders/1ra1Mt_rkAfngzVgWPyX0aa9LX2Rg3J2v"],
+  ["Santo Antônio Spot","01 - Assembleia 09/12/2025","09/12/2025","https://drive.google.com/drive/folders/1hymLw8zZHpDKf_v9NrKWwR87bk4pRPXw"],
+  ["Urubici Spot","09 - AGE 09/06/2026","09/06/2026","https://drive.google.com/drive/folders/1nylUeMByNgsSgYkhy0EFKJ_FFlEKddnZ"],
+  ["Vistas de Anitá II","Assembleia Ordinária 04/2026","04/2026",""]
+];
+
+// ─── TIPO CLASSIFICATION ────────────────────────────────────────────────────
+function classificaTipo(raw) {
+  const r = raw.toLowerCase();
+  if (r.includes('tira') || r.includes('sessão tira') || /\bstd\b/.test(r)) return 'STD';
+  if (r.includes('extraordin') || /\bage\b/.test(r)) return 'AGE';
+  if (r.includes('ordinár') || r.includes('ordinar') || /\bago\b/.test(r)) return 'AGO';
+  if (r.includes('assembleia') || r.includes('reunião')) return 'AGO';
+  return 'AGO';
+}
+
+// ─── DATE HELPERS ────────────────────────────────────────────────────────────
+function parseData(s) {
+  let m = s.match(/^(\d{2})\/(\d{2})\/(\d{4})$/);
+  if (m) return new Date(+m[3], +m[2]-1, +m[1]);
+  m = s.match(/^(\d{4})-(\d{2})-(\d{2})$/);
+  if (m) return new Date(+m[1], +m[2]-1, +m[3]);
+  m = s.match(/^(\d{2})\/(\d{4})$/);
+  if (m) return new Date(+m[2], +m[1]-1, 15);
+  return null;
+}
+function isOld(dateStr) {
+  const d = parseData(dateStr); if (!d) return false;
+  const cutoff = new Date(); cutoff.setMonth(cutoff.getMonth() - 6);
+  return d < cutoff;
+}
+function formatDataDisplay(s) {
+  const d = parseData(s); if (!d) return s;
+  return `${String(d.getDate()).padStart(2,'0')}/${String(d.getMonth()+1).padStart(2,'0')}/${d.getFullYear()}`;
+}
+
+// ─── STORAGE ─────────────────────────────────────────────────────────────────
+function save(key, val) { try { localStorage.setItem('pmo_reu_' + key, val); } catch(e) {} }
+function load(key, def) { try { return localStorage.getItem('pmo_reu_' + key) ?? def; } catch(e) { return def; } }
+
+// ─── BUILD ROW ────────────────────────────────────────────────────────────────
+function buildRow(d, i) {
+  const [emp, meeting, dataStr, link] = d;
+  const baseTipo = classificaTipo(meeting);
+  const old = isOld(dataStr);
+  const dataFmt = formatDataDisplay(dataStr);
+  const key = emp.replace(/\s+/g, '_').replace(/[^a-zA-Z0-9_]/g, '');
+
+  // Load persisted overrides
+  const savedEmp  = load(key + '_emp',  '');
+  const savedMtg  = load(key + '_mtg',  '');
+  const savedTipo = load(key + '_tipo', '');
+  const savedData = load(key + '_data', '');
+  const savedImg  = load(key + '_img',  '');
+  const savedText = load(key + '_txt',  '');
+  const savedSt   = load(key + '_st',   '');
+
+  const empDisp  = savedEmp  || emp;
+  const mtgDisp  = savedMtg  || meeting;
+  const tipoDisp = savedTipo || baseTipo;
+  const dataDisp = savedData || dataFmt;
+
+  const tipoClass = tipoDisp === 'AGE' ? 'b-age' : tipoDisp === 'STD' ? 'b-std' : 'b-ago';
+  const isEdited  = !!(savedEmp || savedMtg || savedTipo || savedData);
+
+  const okA  = savedSt === 'ok'  ? 'active' : '';
+  const nokA = savedSt === 'nok' ? 'active' : '';
+
+  return `
+  <tr class="${old ? 'row-old' : ''} ${isEdited ? 'row-edited' : ''}" id="tr-${i}">
+    <td class="c-num">${i+1}</td>
+    <td class="c-emp">
+      <div class="emp-actions">
+        <span class="edited-dot" title="Linha editada"></span>
+      </div>
+      <span class="emp-name" id="ename-${i}" contenteditable="true"
+        onblur="saveField(${i},'${key}','emp',this)"
+        onfocus="markEdited(${i})">${empDisp}</span>
+      <span class="mtg-name" id="mname-${i}" contenteditable="true"
+        onblur="saveField(${i},'${key}','mtg',this)"
+        onfocus="markEdited(${i})">${mtgDisp}</span>
+      ${link ? `<a class="folder-link" href="${link}" target="_blank" rel="noopener">📂 Drive ↗</a>` : ''}
+      <button class="btn-reset" onclick="resetRow(${i},'${key}')" title="Restaurar original">↺ Restaurar</button>
+    </td>
+    <td>
+      <span class="badge ${tipoClass}" id="badge-${i}"
+        onclick="cycleTipo(${i},'${key}')">${tipoDisp}</span>
+    </td>
+    <td class="c-data ${old ? 'data-old' : ''}">
+      <span id="data-${i}" contenteditable="true"
+        onblur="saveField(${i},'${key}','data',this)"
+        onfocus="markEdited(${i})">${dataDisp}</span>
+    </td>
+    <td class="c-crono crono-cell">
+      <div class="crono-drop" id="cd-${i}" title="Clique para upload ou cole Ctrl+V">
+        <button class="crono-del" onclick="clearImg(${i},'${key}');event.stopPropagation()">✕</button>
+        <input type="file" accept="image/*" onchange="handleFile(event,${i},'${key}')">
+        ${savedImg
+          ? `<img src="${savedImg}" alt="Cronograma" id="ci-${i}">`
+          : `<span class="crono-icon">📷</span><span>Cronograma</span><span style="font-size:10px;opacity:.7">clique ou cole</span>`}
+      </div>
+    </td>
+    <td>
+      <textarea class="analise-ta" rows="3" placeholder="Observações PMO..."
+        oninput="save('${key}_txt',this.value)"
+        id="ta-${i}">${savedText}</textarea>
+    </td>
+    <td class="c-status">
+      <div class="status-group">
+        <button class="st-btn st-ok ${okA}"  title="OK"     onclick="setSt(${i},'${key}','ok')"  id="ok-${i}">✓</button>
+        <button class="st-btn st-nok ${nokA}" title="Não OK" onclick="setSt(${i},'${key}','nok')" id="nok-${i}">✕</button>
+      </div>
+    </td>
+  </tr>`;
+}
+
+// ─── EDIT MODE TOGGLE ────────────────────────────────────────────────────────
+let editMode = false;
+function toggleEdit() {
+  editMode = !editMode;
+  document.body.classList.toggle('edit-mode', editMode);
+  const btn = document.getElementById('btn-edit');
+  btn.classList.toggle('edit-on', editMode);
+  btn.textContent = editMode ? '✅ Editando...' : '✏️ Editar linhas';
+  document.getElementById('edit-hint').textContent = editMode
+    ? 'Clique em qualquer campo de texto para editar · Clique no badge para trocar tipo'
+    : 'Clique em "Editar linhas" para modificar qualquer campo';
+}
+
+// ─── FIELD EDIT ───────────────────────────────────────────────────────────────
+function saveField(i, key, field, el) {
+  const val = el.textContent.trim();
+  const [emp, meeting, dataStr] = DATA[i];
+  const orig = field === 'emp' ? emp
+             : field === 'mtg' ? meeting
+             : field === 'data'? formatDataDisplay(dataStr)
+             : '';
+  if (val === orig) {
+    save(key + '_' + field, '');
+  } else {
+    save(key + '_' + field, val);
+    markEdited(i);
+  }
+  checkEditedState(i, key);
+}
+
+function markEdited(i) {
+  document.getElementById('tr-' + i).classList.add('row-edited');
+}
+
+function checkEditedState(i, key) {
+  const hasEdit = ['emp','mtg','tipo','data'].some(f => load(key+'_'+f,'') !== '');
+  document.getElementById('tr-' + i).classList.toggle('row-edited', hasEdit);
+}
+
+// ─── TIPO CYCLE ───────────────────────────────────────────────────────────────
+function cycleTipo(i, key) {
+  if (!editMode) return;
+  const tipos = ['AGE', 'AGO', 'STD'];
+  const badge = document.getElementById('badge-' + i);
+  const cur = badge.textContent.trim().replace(' ↻','');
+  const next = tipos[(tipos.indexOf(cur) + 1) % tipos.length];
+  badge.textContent = next;
+  badge.className = 'badge ' + (next==='AGE'?'b-age':next==='STD'?'b-std':'b-ago');
+  const [emp, meeting] = DATA[i];
+  const origTipo = classificaTipo(meeting);
+  save(key + '_tipo', next === origTipo ? '' : next);
+  checkEditedState(i, key);
+  updateSummary();
+}
+
+// ─── RESET ROW ────────────────────────────────────────────────────────────────
+function resetRow(i, key) {
+  ['emp','mtg','tipo','data'].forEach(f => save(key + '_' + f, ''));
+  const [emp, meeting, dataStr, link] = DATA[i];
+  const tipo = classificaTipo(meeting);
+  const dataFmt = formatDataDisplay(dataStr);
+  document.getElementById('ename-' + i).textContent = emp;
+  document.getElementById('mname-' + i).textContent = meeting;
+  const badge = document.getElementById('badge-' + i);
+  badge.textContent = tipo;
+  badge.className = 'badge ' + (tipo==='AGE'?'b-age':tipo==='STD'?'b-std':'b-ago');
+  document.getElementById('data-' + i).textContent = dataFmt;
+  document.getElementById('tr-' + i).classList.remove('row-edited');
+  updateSummary();
+}
+
+// ─── IMAGE HANDLING ───────────────────────────────────────────────────────────
+function handleFile(e, i, key) {
+  const f = e.target.files[0]; if (!f) return;
+  const r = new FileReader();
+  r.onload = ev => setImg(i, key, ev.target.result);
+  r.readAsDataURL(f);
+}
+function setImg(i, key, src) {
+  save(key + '_img', src);
+  const cd = document.getElementById('cd-' + i);
+  cd.innerHTML = `<button class="crono-del" onclick="clearImg(${i},'${key}');event.stopPropagation()">✕</button>
+    <input type="file" accept="image/*" onchange="handleFile(event,${i},'${key}')">
+    <img src="${src}" alt="Cronograma" id="ci-${i}">`;
+}
+function clearImg(i, key) {
+  save(key + '_img', '');
+  const cd = document.getElementById('cd-' + i);
+  cd.innerHTML = `<button class="crono-del" onclick="clearImg(${i},'${key}');event.stopPropagation()">✕</button>
+    <input type="file" accept="image/*" onchange="handleFile(event,${i},'${key}')">
+    <span class="crono-icon">📷</span><span>Cronograma</span><span style="font-size:10px;opacity:.7">clique ou cole</span>`;
+}
+
+// ─── STATUS TOGGLE ────────────────────────────────────────────────────────────
+function setSt(i, key, val) {
+  const cur = load(key + '_st', '');
+  const next = cur === val ? '' : val;
+  save(key + '_st', next);
+  document.getElementById('ok-'  + i).className = 'st-btn st-ok'  + (next === 'ok'  ? ' active' : '');
+  document.getElementById('nok-' + i).className = 'st-btn st-nok' + (next === 'nok' ? ' active' : '');
+}
+
+// ─── SUMMARY ──────────────────────────────────────────────────────────────────
+function updateSummary() {
+  const rows = [...document.querySelectorAll('#tbody .badge')];
+  let age=0, ago=0, std=0;
+  rows.forEach(b => {
+    const t = b.textContent.trim().replace(' ↻','');
+    if (t==='AGE') age++; else if (t==='STD') std++; else ago++;
+  });
+  document.getElementById('s-age').textContent = age;
+  document.getElementById('s-ago').textContent = ago;
+  document.getElementById('s-std').textContent = std;
+}
+
+// ─── PASTE HANDLER ────────────────────────────────────────────────────────────
+document.addEventListener('paste', e => {
+  const items = e.clipboardData && e.clipboardData.items;
+  if (!items) return;
+  for (const item of items) {
+    if (item.type.startsWith('image/')) {
+      const focus = document.activeElement;
+      const tr = focus ? focus.closest('tr') : null;
+      if (!tr) return;
+      const idx = tr.id.replace('tr-','');
+      const key = DATA[idx][0].replace(/\s+/g,'_').replace(/[^a-zA-Z0-9_]/g,'');
+      const blob = item.getAsFile();
+      const r = new FileReader();
+      r.onload = ev => setImg(+idx, key, ev.target.result);
+      r.readAsDataURL(blob);
+    }
+  }
+});
+
+// ─── INIT ─────────────────────────────────────────────────────────────────────
+const tbody = document.getElementById('tbody');
+tbody.innerHTML = DATA.map((d,i) => buildRow(d,i)).join('');
+
+document.getElementById('s-total').textContent = DATA.length;
+updateSummary();
+
+const now = new Date();
+document.getElementById('stamp').textContent =
+  `${String(now.getDate()).padStart(2,'0')}/${String(now.getMonth()+1).padStart(2,'0')}/${now.getFullYear()}`;
+</script>
