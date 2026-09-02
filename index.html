@@ -21,44 +21,26 @@
 }
 @media (prefers-color-scheme: dark) {
   :root:not([data-theme="light"]) {
-    --bg:    #0b1320;
-    --card:  #112240;
-    --border:#1e3558;
-    --text:  #e2eaf5;
-    --muted: #8fa3be;
-    --faint: #607090;
+    --bg:    #0b1320; --card:  #112240;
+    --border:#1e3558; --text:  #e2eaf5;
+    --muted: #8fa3be; --faint: #607090;
   }
 }
 :root[data-theme="dark"] {
-  --bg:    #0b1320;
-  --card:  #112240;
-  --border:#1e3558;
-  --text:  #e2eaf5;
-  --muted: #8fa3be;
-  --faint: #607090;
+  --bg:    #0b1320; --card:  #112240;
+  --border:#1e3558; --text:  #e2eaf5;
+  --muted: #8fa3be; --faint: #607090;
 }
 
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 html { font-size: 14px; }
-body {
-  font-family: 'Inter', system-ui, -apple-system, sans-serif;
-  background: var(--bg);
-  color: var(--text);
-  line-height: 1.5;
-}
+body { font-family: 'Inter', system-ui, -apple-system, sans-serif; background: var(--bg); color: var(--text); line-height: 1.5; }
 
 /* HEADER */
 .header {
-  background: var(--navy);
-  color: #fff;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  padding: 0 24px;
-  height: 52px;
-  position: sticky;
-  top: 0;
-  z-index: 100;
+  background: var(--navy); color: #fff;
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 0 24px; height: 52px; position: sticky; top: 0; z-index: 100;
   box-shadow: 0 2px 12px rgba(0,0,0,.35);
 }
 .header-left { display: flex; align-items: center; gap: 12px; }
@@ -68,22 +50,17 @@ body {
 .header-right { display: flex; align-items: center; gap: 8px; }
 .stamp { font-size: 11px; color: rgba(255,255,255,.5); font-variant-numeric: tabular-nums; }
 .btn-hdr {
-  font-size: 11px; font-weight: 600;
-  padding: 5px 10px; border-radius: 6px;
-  background: rgba(255,255,255,.12);
-  border: 1px solid rgba(255,255,255,.2);
-  color: #fff; cursor: pointer;
-  transition: background .15s; white-space:nowrap;
+  font-size: 11px; font-weight: 600; padding: 5px 10px; border-radius: 6px;
+  background: rgba(255,255,255,.12); border: 1px solid rgba(255,255,255,.2);
+  color: #fff; cursor: pointer; transition: background .15s; white-space: nowrap;
 }
 .btn-hdr:hover { background: rgba(255,255,255,.22); }
 .btn-hdr.edit-on { background: rgba(11,212,190,.25); border-color: var(--teal2); }
 
 /* SUMMARY BAR */
 .summary {
-  background: var(--card);
-  border-bottom: 1px solid var(--border);
-  padding: 8px 24px;
-  display: flex; gap: 16px; align-items: center; flex-wrap: wrap;
+  background: var(--card); border-bottom: 1px solid var(--border);
+  padding: 8px 24px; display: flex; gap: 16px; align-items: center; flex-wrap: wrap;
   font-size: 12px; color: var(--muted);
 }
 .summary strong { color: var(--text); font-variant-numeric: tabular-nums; }
@@ -92,34 +69,31 @@ body {
   padding: 3px 8px; border-radius: 4px;
   font-size: 11px; font-weight: 600; letter-spacing: .03em;
 }
-.pill-age { background: rgba(217,119,6,.12);   color: var(--amber);  }
-.pill-ago { background: rgba(12,154,138,.12);  color: var(--teal);   }
-.pill-std { background: rgba(124,58,237,.12);  color: var(--purple); }
-.edit-hint { font-size:11px; color: var(--faint); margin-left:auto; }
+.pill-age { background: rgba(217,119,6,.12);  color: var(--amber);  }
+.pill-ago { background: rgba(12,154,138,.12); color: var(--teal);   }
+.pill-std { background: rgba(124,58,237,.12); color: var(--purple); }
+.edit-hint { font-size: 11px; color: var(--faint); margin-left: auto; }
 
-/* TABLE WRAPPER */
+/* TABLE */
 .wrap { overflow-x: auto; padding: 16px 24px 40px; }
 table {
-  width: 100%; border-collapse: collapse;
-  background: var(--card);
+  width: 100%; border-collapse: collapse; background: var(--card);
   border-radius: 10px; overflow: hidden;
-  box-shadow: 0 1px 4px rgba(0,0,0,.06);
-  border: 1px solid var(--border);
+  box-shadow: 0 1px 4px rgba(0,0,0,.06); border: 1px solid var(--border);
 }
 thead tr { background: var(--navy2); color: rgba(255,255,255,.85); }
 th {
-  padding: 10px 12px;
-  font-size: 11px; font-weight: 600;
+  padding: 10px 12px; font-size: 11px; font-weight: 600;
   letter-spacing: .06em; text-transform: uppercase;
   text-align: left; white-space: nowrap;
 }
 th.c-num    { width: 36px; text-align: center; }
-th.c-emp    { min-width: 180px; }
+th.c-emp    { min-width: 200px; }
 th.c-tipo   { width: 80px; }
 th.c-data   { width: 110px; }
-th.c-crono  { width: 180px; }
-th.c-analise{ min-width: 220px; }
-th.c-status { width: 110px; text-align: center; }
+th.c-crono  { width: 175px; }
+th.c-analise{ min-width: 200px; }
+th.c-status, th.c-obs, th.c-nom { width: 120px; text-align: center; }
 
 tbody tr { border-top: 1px solid var(--border); transition: background .1s; }
 tbody tr:hover { background: rgba(12,154,138,.03); }
@@ -129,12 +103,12 @@ tbody tr.row-edited { box-shadow: inset 3px 0 0 var(--blue); }
 td { padding: 10px 12px; vertical-align: top; font-size: 13px; }
 td.c-num { text-align: center; color: var(--faint); font-size: 12px; font-variant-numeric: tabular-nums; }
 td.c-emp { font-weight: 600; font-size: 13px; }
+td.c-status, td.c-obs, td.c-nom { vertical-align: middle; }
 
 /* EDITABLE CELLS */
 [contenteditable] {
   outline: none; border-radius: 4px;
-  transition: background .12s, box-shadow .12s;
-  cursor: text;
+  transition: background .12s, box-shadow .12s; cursor: text;
 }
 [contenteditable]:focus {
   background: rgba(37,99,235,.07);
@@ -152,78 +126,82 @@ body.edit-mode [contenteditable]:hover:not(:focus) {
 .emp-name { display: block; }
 .mtg-name {
   display: block; font-size: 11px; color: var(--muted);
-  font-weight: 400; margin-top: 2px;
-  max-width: 220px;
+  font-weight: 400; margin-top: 2px; max-width: 240px;
 }
+/* Drive link area */
+.drive-wrap { margin-top: 4px; }
 .folder-link {
   display: inline-flex; align-items: center; gap: 4px;
   font-size: 11px; color: var(--teal); font-weight: 500;
-  text-decoration: none; margin-top: 3px; opacity: .8;
+  text-decoration: none; opacity: .8;
 }
 .folder-link:hover { opacity: 1; }
-.emp-actions { display:flex; align-items:center; gap:6px; margin-top:4px; }
+/* URL edit field — only visible in edit mode */
+.drive-url-edit {
+  display: none; font-size: 10px; color: var(--muted);
+  word-break: break-all; max-width: 230px;
+  border: 1px dashed var(--border); border-radius: 4px;
+  padding: 3px 5px; margin-top: 2px; background: var(--bg);
+  min-height: 18px;
+}
+body.edit-mode .drive-url-edit { display: block; }
+body.edit-mode .drive-url-edit:hover:not(:focus) {
+  border-color: var(--blue); background: rgba(37,99,235,.04);
+}
+.drive-url-edit:focus { box-shadow: 0 0 0 2px rgba(37,99,235,.3); border-color: transparent; }
+/* Add-link placeholder in edit mode when link is empty */
+.drive-add {
+  display: none; font-size: 10px; color: var(--faint);
+  cursor: text; padding: 2px 4px;
+}
+body.edit-mode .drive-add { display: inline; }
+
+.emp-actions { display: flex; align-items: center; gap: 6px; margin-bottom: 3px; }
 .btn-reset {
   font-size: 10px; padding: 2px 6px; border-radius: 4px;
   border: 1px solid var(--border); background: transparent;
-  color: var(--muted); cursor: pointer;
-  transition: all .12s; display:none;
+  color: var(--muted); cursor: pointer; transition: all .12s; display: none;
 }
 body.edit-mode .btn-reset { display: inline-block; }
 .btn-reset:hover { border-color: var(--red); color: var(--red); }
-.edited-dot {
-  width:6px; height:6px; border-radius:50%; background:var(--blue);
-  flex-shrink:0; display:none;
-}
-.row-edited .edited-dot { display:inline-block; }
+.edited-dot { width: 6px; height: 6px; border-radius: 50%; background: var(--blue); flex-shrink: 0; display: none; }
+.row-edited .edited-dot { display: inline-block; }
 
 /* TIPO BADGE */
 .badge {
   display: inline-block; padding: 3px 8px; border-radius: 4px;
-  font-size: 11px; font-weight: 700; letter-spacing: .04em;
-  transition: transform .1s;
+  font-size: 11px; font-weight: 700; letter-spacing: .04em; transition: transform .1s;
 }
 .b-age { background: rgba(217,119,6,.14);  color: var(--amber);  }
 .b-ago { background: rgba(12,154,138,.14); color: var(--teal);   }
 .b-std { background: rgba(124,58,237,.14); color: var(--purple); }
-.b-outro { background: rgba(100,116,139,.12); color: var(--muted); }
 body.edit-mode .badge { cursor: pointer; }
 body.edit-mode .badge:hover { transform: scale(1.08); }
-body.edit-mode .badge::after { content: ' ↻'; font-size:9px; opacity:.6; }
+body.edit-mode .badge::after { content: ' ↻'; font-size: 9px; opacity: .6; }
 
 /* DATA */
-td.c-data {
-  font-variant-numeric: tabular-nums;
-  font-size: 12px; color: var(--muted); white-space: nowrap;
-}
+td.c-data { font-variant-numeric: tabular-nums; font-size: 12px; color: var(--muted); white-space: nowrap; }
 .data-old { color: var(--red); font-weight: 600; }
 
 /* CRONOGRAMA */
 .crono-cell { position: relative; }
 .crono-drop {
-  width: 160px; height: 90px;
+  width: 155px; height: 88px;
   border: 2px dashed var(--border); border-radius: 6px;
-  display: flex; flex-direction: column;
-  align-items: center; justify-content: center;
+  display: flex; flex-direction: column; align-items: center; justify-content: center;
   gap: 4px; cursor: pointer;
   transition: border-color .15s, background .15s;
   font-size: 11px; color: var(--faint); text-align: center;
   background: rgba(0,0,0,.01); overflow: hidden; position: relative;
 }
 .crono-drop:hover { border-color: var(--teal); color: var(--teal); background: rgba(12,154,138,.04); }
-.crono-drop img {
-  position: absolute; inset: 0;
-  width: 100%; height: 100%; object-fit: cover; border-radius: 4px; cursor: pointer;
-}
-.crono-drop input[type=file] {
-  position: absolute; inset: 0; opacity: 0; cursor: pointer;
-  width: 100%; height: 100%;
-}
+.crono-drop img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; border-radius: 4px; }
+.crono-drop input[type=file] { position: absolute; inset: 0; opacity: 0; cursor: pointer; width: 100%; height: 100%; }
 .crono-icon { font-size: 18px; line-height: 1; }
 .crono-del {
   position: absolute; top: 3px; right: 3px;
   background: rgba(220,38,38,.85); color: #fff;
-  border: none; border-radius: 3px;
-  font-size: 10px; font-weight: 700;
+  border: none; border-radius: 3px; font-size: 10px; font-weight: 700;
   padding: 1px 5px; cursor: pointer; display: none; z-index: 2;
 }
 .crono-drop:hover .crono-del { display: block; }
@@ -233,24 +211,25 @@ td.c-data {
   width: 100%; min-height: 60px; resize: vertical;
   border: 1px solid var(--border); border-radius: 6px;
   padding: 7px 9px; font-family: inherit; font-size: 12px;
-  color: var(--text); background: var(--bg);
-  transition: border-color .15s; line-height: 1.5;
+  color: var(--text); background: var(--bg); transition: border-color .15s; line-height: 1.5;
 }
 .analise-ta:focus { outline: none; border-color: var(--teal); }
 .analise-ta::placeholder { color: var(--faint); }
 
-/* STATUS */
-td.c-status { vertical-align: middle; }
+/* STATUS GROUPS */
 .status-group { display: flex; gap: 6px; justify-content: center; }
 .st-btn {
   display: inline-flex; align-items: center; justify-content: center;
-  width: 40px; height: 32px; border-radius: 6px;
+  width: 38px; height: 30px; border-radius: 6px;
   border: 1.5px solid var(--border); cursor: pointer;
-  font-size: 16px; background: transparent; transition: border-color .15s, background .15s;
+  font-size: 15px; background: transparent; transition: border-color .15s, background .15s;
 }
 .st-btn:hover { border-color: var(--faint); }
 .st-ok.active  { background: rgba(22,163,74,.12);  border-color: var(--green); }
 .st-nok.active { background: rgba(220,38,38,.12); border-color: var(--red); }
+
+/* column header labels for new cols */
+.col-label { display: block; font-size: 10px; letter-spacing: .05em; }
 
 @media print {
   .header { position: static; }
@@ -258,6 +237,7 @@ td.c-status { vertical-align: middle; }
   .crono-drop input[type=file] { display: none; }
   .analise-ta { border: 1px solid #ccc; }
   .folder-link { display: none; }
+  .drive-url-edit { display: none; }
 }
 </style>
 
@@ -292,7 +272,9 @@ td.c-status { vertical-align: middle; }
       <th class="c-data">Data</th>
       <th class="c-crono">Cronograma</th>
       <th class="c-analise">Análise PMO</th>
-      <th class="c-status">Status</th>
+      <th class="c-status" style="text-align:center">Status</th>
+      <th class="c-obs"   style="text-align:center"><span class="col-label">Pasta</span>Obsoleto</th>
+      <th class="c-nom"   style="text-align:center"><span class="col-label">Padronização</span>Nomenclatura</th>
     </tr>
   </thead>
   <tbody id="tbody"></tbody>
@@ -336,92 +318,107 @@ const DATA = [
   ["Vistas de Anitá II","Assembleia Ordinária 04/2026","04/2026",""]
 ];
 
-// ─── TIPO CLASSIFICATION ────────────────────────────────────────────────────
+// ─── HELPERS ──────────────────────────────────────────────────────────────────
 function classificaTipo(raw) {
   const r = raw.toLowerCase();
   if (r.includes('tira') || r.includes('sessão tira') || /\bstd\b/.test(r)) return 'STD';
   if (r.includes('extraordin') || /\bage\b/.test(r)) return 'AGE';
   if (r.includes('ordinár') || r.includes('ordinar') || /\bago\b/.test(r)) return 'AGO';
-  if (r.includes('assembleia') || r.includes('reunião')) return 'AGO';
   return 'AGO';
 }
-
-// ─── DATE HELPERS ────────────────────────────────────────────────────────────
 function parseData(s) {
   let m = s.match(/^(\d{2})\/(\d{2})\/(\d{4})$/);
-  if (m) return new Date(+m[3], +m[2]-1, +m[1]);
+  if (m) return new Date(+m[3],+m[2]-1,+m[1]);
   m = s.match(/^(\d{4})-(\d{2})-(\d{2})$/);
-  if (m) return new Date(+m[1], +m[2]-1, +m[3]);
+  if (m) return new Date(+m[1],+m[2]-1,+m[3]);
   m = s.match(/^(\d{2})\/(\d{4})$/);
-  if (m) return new Date(+m[2], +m[1]-1, 15);
+  if (m) return new Date(+m[2],+m[1]-1,15);
   return null;
 }
-function isOld(dateStr) {
-  const d = parseData(dateStr); if (!d) return false;
-  const cutoff = new Date(); cutoff.setMonth(cutoff.getMonth() - 6);
-  return d < cutoff;
+function isOld(s) {
+  const d = parseData(s); if (!d) return false;
+  const c = new Date(); c.setMonth(c.getMonth()-6); return d < c;
 }
-function formatDataDisplay(s) {
+function fmtDate(s) {
   const d = parseData(s); if (!d) return s;
   return `${String(d.getDate()).padStart(2,'0')}/${String(d.getMonth()+1).padStart(2,'0')}/${d.getFullYear()}`;
 }
+function escHtml(s) {
+  return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+}
 
 // ─── STORAGE ─────────────────────────────────────────────────────────────────
-function save(key, val) { try { localStorage.setItem('pmo_reu_' + key, val); } catch(e) {} }
-function load(key, def) { try { return localStorage.getItem('pmo_reu_' + key) ?? def; } catch(e) { return def; } }
+function save(k,v) { try { localStorage.setItem('pmo_reu_'+k,v); } catch(e){} }
+function load(k,d) { try { return localStorage.getItem('pmo_reu_'+k)??d; } catch(e){ return d; } }
 
 // ─── BUILD ROW ────────────────────────────────────────────────────────────────
 function buildRow(d, i) {
   const [emp, meeting, dataStr, link] = d;
   const baseTipo = classificaTipo(meeting);
-  const old = isOld(dataStr);
-  const dataFmt = formatDataDisplay(dataStr);
-  const key = emp.replace(/\s+/g, '_').replace(/[^a-zA-Z0-9_]/g, '');
+  const old      = isOld(dataStr);
+  const dataFmt  = fmtDate(dataStr);
+  const key      = emp.replace(/\s+/g,'_').replace(/[^a-zA-Z0-9_]/g,'');
 
-  // Load persisted overrides
-  const savedEmp  = load(key + '_emp',  '');
-  const savedMtg  = load(key + '_mtg',  '');
-  const savedTipo = load(key + '_tipo', '');
-  const savedData = load(key + '_data', '');
-  const savedImg  = load(key + '_img',  '');
-  const savedText = load(key + '_txt',  '');
-  const savedSt   = load(key + '_st',   '');
+  const savedEmp  = load(key+'_emp',  '');
+  const savedMtg  = load(key+'_mtg',  '');
+  const savedTipo = load(key+'_tipo', '');
+  const savedData = load(key+'_data', '');
+  const savedLnk  = load(key+'_lnk',  '');
+  const savedImg  = load(key+'_img',  '');
+  const savedText = load(key+'_txt',  '');
+  const savedSt   = load(key+'_st',   '');
+  const savedObs  = load(key+'_obs',  '');
+  const savedNom  = load(key+'_nom',  '');
 
   const empDisp  = savedEmp  || emp;
   const mtgDisp  = savedMtg  || meeting;
   const tipoDisp = savedTipo || baseTipo;
   const dataDisp = savedData || dataFmt;
+  const linkDisp = savedLnk  || link;
 
-  const tipoClass = tipoDisp === 'AGE' ? 'b-age' : tipoDisp === 'STD' ? 'b-std' : 'b-ago';
-  const isEdited  = !!(savedEmp || savedMtg || savedTipo || savedData);
+  const tc = tipoDisp==='AGE'?'b-age':tipoDisp==='STD'?'b-std':'b-ago';
+  const isEdited = !!(savedEmp||savedMtg||savedTipo||savedData||savedLnk);
 
-  const okA  = savedSt === 'ok'  ? 'active' : '';
-  const nokA = savedSt === 'nok' ? 'active' : '';
+  const okA  = v => v==='ok'  ? ' active' : '';
+  const nokA = v => v==='nok' ? ' active' : '';
+
+  // Drive link block
+  const driveBlock = `
+    <div class="drive-wrap">
+      ${linkDisp
+        ? `<a class="folder-link" id="dlink-${i}" href="${escHtml(linkDisp)}" target="_blank" rel="noopener">📂 Drive ↗</a>`
+        : `<span class="folder-link" id="dlink-${i}" style="opacity:.4;pointer-events:none">📂 Drive</span>`}
+      <div class="drive-url-edit" id="durl-${i}" contenteditable="true"
+        data-orig="${escHtml(link)}"
+        onblur="saveDriveLink(${i},'${key}',this)"
+        onfocus="markEdited(${i})"
+        title="Cole ou edite o link do Drive">${escHtml(linkDisp)}</div>
+    </div>`;
 
   return `
-  <tr class="${old ? 'row-old' : ''} ${isEdited ? 'row-edited' : ''}" id="tr-${i}">
+  <tr class="${old?'row-old':''} ${isEdited?'row-edited':''}" id="tr-${i}">
     <td class="c-num">${i+1}</td>
     <td class="c-emp">
       <div class="emp-actions">
         <span class="edited-dot" title="Linha editada"></span>
+        <button class="btn-reset" onclick="resetRow(${i},'${key}')" title="Restaurar original">↺ Restaurar</button>
       </div>
       <span class="emp-name" id="ename-${i}" contenteditable="true"
         onblur="saveField(${i},'${key}','emp',this)"
-        onfocus="markEdited(${i})">${empDisp}</span>
+        onfocus="markEdited(${i})">${escHtml(empDisp)}</span>
       <span class="mtg-name" id="mname-${i}" contenteditable="true"
         onblur="saveField(${i},'${key}','mtg',this)"
-        onfocus="markEdited(${i})">${mtgDisp}</span>
-      ${link ? `<a class="folder-link" href="${link}" target="_blank" rel="noopener">📂 Drive ↗</a>` : ''}
-      <button class="btn-reset" onclick="resetRow(${i},'${key}')" title="Restaurar original">↺ Restaurar</button>
+        onfocus="markEdited(${i})">${escHtml(mtgDisp)}</span>
+      ${driveBlock}
     </td>
     <td>
-      <span class="badge ${tipoClass}" id="badge-${i}"
+      <span class="badge ${tc}" id="badge-${i}"
         onclick="cycleTipo(${i},'${key}')">${tipoDisp}</span>
     </td>
-    <td class="c-data ${old ? 'data-old' : ''}">
+    <td class="c-data ${old?'data-old':''}">
       <span id="data-${i}" contenteditable="true"
         onblur="saveField(${i},'${key}','data',this)"
-        onfocus="markEdited(${i})">${dataDisp}</span>
+        onfocus="markEdited(${i})">${escHtml(dataDisp)}</span>
     </td>
     <td class="c-crono crono-cell">
       <div class="crono-drop" id="cd-${i}" title="Clique para upload ou cole Ctrl+V">
@@ -439,14 +436,26 @@ function buildRow(d, i) {
     </td>
     <td class="c-status">
       <div class="status-group">
-        <button class="st-btn st-ok ${okA}"  title="OK"     onclick="setSt(${i},'${key}','ok')"  id="ok-${i}">✓</button>
-        <button class="st-btn st-nok ${nokA}" title="Não OK" onclick="setSt(${i},'${key}','nok')" id="nok-${i}">✕</button>
+        <button class="st-btn st-ok${okA(savedSt)}"   title="OK"     onclick="setSt(${i},'${key}','st','ok')"   id="ok-${i}">✓</button>
+        <button class="st-btn st-nok${nokA(savedSt)}" title="Não OK" onclick="setSt(${i},'${key}','st','nok')"  id="nok-${i}">✕</button>
+      </div>
+    </td>
+    <td class="c-obs">
+      <div class="status-group">
+        <button class="st-btn st-ok${okA(savedObs)}"   title="OK"     onclick="setSt(${i},'${key}','obs','ok')"   id="obs-ok-${i}">✓</button>
+        <button class="st-btn st-nok${nokA(savedObs)}" title="Não OK" onclick="setSt(${i},'${key}','obs','nok')"  id="obs-nok-${i}">✕</button>
+      </div>
+    </td>
+    <td class="c-nom">
+      <div class="status-group">
+        <button class="st-btn st-ok${okA(savedNom)}"   title="OK"     onclick="setSt(${i},'${key}','nom','ok')"   id="nom-ok-${i}">✓</button>
+        <button class="st-btn st-nok${nokA(savedNom)}" title="Não OK" onclick="setSt(${i},'${key}','nom','nok')"  id="nom-nok-${i}">✕</button>
       </div>
     </td>
   </tr>`;
 }
 
-// ─── EDIT MODE TOGGLE ────────────────────────────────────────────────────────
+// ─── EDIT MODE TOGGLE ─────────────────────────────────────────────────────────
 let editMode = false;
 function toggleEdit() {
   editMode = !editMode;
@@ -455,7 +464,7 @@ function toggleEdit() {
   btn.classList.toggle('edit-on', editMode);
   btn.textContent = editMode ? '✅ Editando...' : '✏️ Editar linhas';
   document.getElementById('edit-hint').textContent = editMode
-    ? 'Clique em qualquer campo de texto para editar · Clique no badge para trocar tipo'
+    ? 'Nome · Reunião · Tipo (badge) · Data · Link Drive — todos editáveis'
     : 'Clique em "Editar linhas" para modificar qualquer campo';
 }
 
@@ -463,57 +472,66 @@ function toggleEdit() {
 function saveField(i, key, field, el) {
   const val = el.textContent.trim();
   const [emp, meeting, dataStr] = DATA[i];
-  const orig = field === 'emp' ? emp
-             : field === 'mtg' ? meeting
-             : field === 'data'? formatDataDisplay(dataStr)
-             : '';
-  if (val === orig) {
-    save(key + '_' + field, '');
-  } else {
-    save(key + '_' + field, val);
-    markEdited(i);
+  const orig = field==='emp'?emp : field==='mtg'?meeting : field==='data'?fmtDate(dataStr) : '';
+  save(key+'_'+field, val===orig ? '' : val);
+  checkEditedState(i, key);
+}
+function saveDriveLink(i, key, el) {
+  const val = el.textContent.trim();
+  const orig = DATA[i][3];
+  save(key+'_lnk', val===orig ? '' : val);
+  // Update the anchor href live
+  const anchor = document.getElementById('dlink-'+i);
+  if (anchor) {
+    if (val) {
+      anchor.href = val;
+      anchor.style.opacity = '';
+      anchor.style.pointerEvents = '';
+    } else {
+      anchor.removeAttribute('href');
+      anchor.style.opacity = '.4';
+      anchor.style.pointerEvents = 'none';
+    }
   }
   checkEditedState(i, key);
 }
-
-function markEdited(i) {
-  document.getElementById('tr-' + i).classList.add('row-edited');
-}
-
+function markEdited(i) { document.getElementById('tr-'+i).classList.add('row-edited'); }
 function checkEditedState(i, key) {
-  const hasEdit = ['emp','mtg','tipo','data'].some(f => load(key+'_'+f,'') !== '');
-  document.getElementById('tr-' + i).classList.toggle('row-edited', hasEdit);
+  const hasEdit = ['emp','mtg','tipo','data','lnk'].some(f => load(key+'_'+f,'') !== '');
+  document.getElementById('tr-'+i).classList.toggle('row-edited', hasEdit);
 }
 
 // ─── TIPO CYCLE ───────────────────────────────────────────────────────────────
 function cycleTipo(i, key) {
   if (!editMode) return;
-  const tipos = ['AGE', 'AGO', 'STD'];
-  const badge = document.getElementById('badge-' + i);
+  const tipos = ['AGE','AGO','STD'];
+  const badge = document.getElementById('badge-'+i);
   const cur = badge.textContent.trim().replace(' ↻','');
-  const next = tipos[(tipos.indexOf(cur) + 1) % tipos.length];
+  const next = tipos[(tipos.indexOf(cur)+1)%tipos.length];
   badge.textContent = next;
-  badge.className = 'badge ' + (next==='AGE'?'b-age':next==='STD'?'b-std':'b-ago');
-  const [emp, meeting] = DATA[i];
-  const origTipo = classificaTipo(meeting);
-  save(key + '_tipo', next === origTipo ? '' : next);
+  badge.className = 'badge '+(next==='AGE'?'b-age':next==='STD'?'b-std':'b-ago');
+  const origTipo = classificaTipo(DATA[i][1]);
+  save(key+'_tipo', next===origTipo ? '' : next);
   checkEditedState(i, key);
   updateSummary();
 }
 
 // ─── RESET ROW ────────────────────────────────────────────────────────────────
 function resetRow(i, key) {
-  ['emp','mtg','tipo','data'].forEach(f => save(key + '_' + f, ''));
+  ['emp','mtg','tipo','data','lnk'].forEach(f => save(key+'_'+f,''));
   const [emp, meeting, dataStr, link] = DATA[i];
   const tipo = classificaTipo(meeting);
-  const dataFmt = formatDataDisplay(dataStr);
-  document.getElementById('ename-' + i).textContent = emp;
-  document.getElementById('mname-' + i).textContent = meeting;
-  const badge = document.getElementById('badge-' + i);
+  const dataFmt = fmtDate(dataStr);
+  document.getElementById('ename-'+i).textContent = emp;
+  document.getElementById('mname-'+i).textContent = meeting;
+  document.getElementById('durl-'+i).textContent = link;
+  const anchor = document.getElementById('dlink-'+i);
+  if (anchor && link) { anchor.href = link; anchor.style.opacity=''; anchor.style.pointerEvents=''; }
+  const badge = document.getElementById('badge-'+i);
   badge.textContent = tipo;
-  badge.className = 'badge ' + (tipo==='AGE'?'b-age':tipo==='STD'?'b-std':'b-ago');
-  document.getElementById('data-' + i).textContent = dataFmt;
-  document.getElementById('tr-' + i).classList.remove('row-edited');
+  badge.className = 'badge '+(tipo==='AGE'?'b-age':tipo==='STD'?'b-std':'b-ago');
+  document.getElementById('data-'+i).textContent = dataFmt;
+  document.getElementById('tr-'+i).classList.remove('row-edited');
   updateSummary();
 }
 
@@ -525,34 +543,34 @@ function handleFile(e, i, key) {
   r.readAsDataURL(f);
 }
 function setImg(i, key, src) {
-  save(key + '_img', src);
-  const cd = document.getElementById('cd-' + i);
-  cd.innerHTML = `<button class="crono-del" onclick="clearImg(${i},'${key}');event.stopPropagation()">✕</button>
+  save(key+'_img', src);
+  document.getElementById('cd-'+i).innerHTML =
+    `<button class="crono-del" onclick="clearImg(${i},'${key}');event.stopPropagation()">✕</button>
     <input type="file" accept="image/*" onchange="handleFile(event,${i},'${key}')">
     <img src="${src}" alt="Cronograma" id="ci-${i}">`;
 }
 function clearImg(i, key) {
-  save(key + '_img', '');
-  const cd = document.getElementById('cd-' + i);
-  cd.innerHTML = `<button class="crono-del" onclick="clearImg(${i},'${key}');event.stopPropagation()">✕</button>
+  save(key+'_img','');
+  document.getElementById('cd-'+i).innerHTML =
+    `<button class="crono-del" onclick="clearImg(${i},'${key}');event.stopPropagation()">✕</button>
     <input type="file" accept="image/*" onchange="handleFile(event,${i},'${key}')">
     <span class="crono-icon">📷</span><span>Cronograma</span><span style="font-size:10px;opacity:.7">clique ou cole</span>`;
 }
 
-// ─── STATUS TOGGLE ────────────────────────────────────────────────────────────
-function setSt(i, key, val) {
-  const cur = load(key + '_st', '');
-  const next = cur === val ? '' : val;
-  save(key + '_st', next);
-  document.getElementById('ok-'  + i).className = 'st-btn st-ok'  + (next === 'ok'  ? ' active' : '');
-  document.getElementById('nok-' + i).className = 'st-btn st-nok' + (next === 'nok' ? ' active' : '');
+// ─── STATUS TOGGLE (generic — suffix = 'st', 'obs', 'nom') ───────────────────
+function setSt(i, key, sfx, val) {
+  const cur = load(key+'_'+sfx, '');
+  const next = cur===val ? '' : val;
+  save(key+'_'+sfx, next);
+  const prefix = sfx==='st' ? '' : sfx+'-';
+  document.getElementById(prefix+'ok-'+i).className  = 'st-btn st-ok'  + (next==='ok'  ? ' active' : '');
+  document.getElementById(prefix+'nok-'+i).className = 'st-btn st-nok' + (next==='nok' ? ' active' : '');
 }
 
-// ─── SUMMARY ──────────────────────────────────────────────────────────────────
+// ─── SUMMARY ─────────────────────────────────────────────────────────────────
 function updateSummary() {
-  const rows = [...document.querySelectorAll('#tbody .badge')];
-  let age=0, ago=0, std=0;
-  rows.forEach(b => {
+  let age=0,ago=0,std=0;
+  document.querySelectorAll('#tbody .badge').forEach(b => {
     const t = b.textContent.trim().replace(' ↻','');
     if (t==='AGE') age++; else if (t==='STD') std++; else ago++;
   });
@@ -567,26 +585,21 @@ document.addEventListener('paste', e => {
   if (!items) return;
   for (const item of items) {
     if (item.type.startsWith('image/')) {
-      const focus = document.activeElement;
-      const tr = focus ? focus.closest('tr') : null;
+      const tr = document.activeElement?.closest('tr');
       if (!tr) return;
       const idx = tr.id.replace('tr-','');
       const key = DATA[idx][0].replace(/\s+/g,'_').replace(/[^a-zA-Z0-9_]/g,'');
-      const blob = item.getAsFile();
       const r = new FileReader();
       r.onload = ev => setImg(+idx, key, ev.target.result);
-      r.readAsDataURL(blob);
+      r.readAsDataURL(item.getAsFile());
     }
   }
 });
 
 // ─── INIT ─────────────────────────────────────────────────────────────────────
-const tbody = document.getElementById('tbody');
-tbody.innerHTML = DATA.map((d,i) => buildRow(d,i)).join('');
-
+document.getElementById('tbody').innerHTML = DATA.map((d,i) => buildRow(d,i)).join('');
 document.getElementById('s-total').textContent = DATA.length;
 updateSummary();
-
 const now = new Date();
 document.getElementById('stamp').textContent =
   `${String(now.getDate()).padStart(2,'0')}/${String(now.getMonth()+1).padStart(2,'0')}/${now.getFullYear()}`;
