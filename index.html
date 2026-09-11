@@ -69,9 +69,9 @@ body { font-family: 'Inter', system-ui, -apple-system, sans-serif; background: v
   padding: 3px 8px; border-radius: 4px;
   font-size: 11px; font-weight: 600; letter-spacing: .03em;
 }
-.pill-age { background: rgba(217,119,6,.12);  color: var(--amber);  }
-.pill-ago { background: rgba(12,154,138,.12); color: var(--teal);   }
-.pill-std { background: rgba(124,58,237,.12); color: var(--purple); }
+.pill-ok   { background: rgba(22,163,74,.12);   color: var(--green); }
+.pill-nok  { background: rgba(220,38,38,.12);   color: var(--red);   }
+.pill-pend { background: rgba(148,163,184,.16); color: var(--muted); }
 .edit-hint { font-size: 11px; color: var(--faint); margin-left: auto; }
 
 /* TABLE */
@@ -93,7 +93,7 @@ th.c-tipo   { width: 80px; }
 th.c-data   { width: 110px; }
 th.c-crono  { width: 175px; }
 th.c-analise{ min-width: 200px; }
-th.c-status, th.c-obs, th.c-nom { width: 120px; text-align: center; }
+th.c-status, th.c-obs, th.c-nom, th.c-fech { width: 120px; text-align: center; }
 
 tbody tr { border-top: 1px solid var(--border); transition: background .1s; }
 tbody tr:hover { background: rgba(12,154,138,.03); }
@@ -103,7 +103,7 @@ tbody tr.row-edited { box-shadow: inset 3px 0 0 var(--blue); }
 td { padding: 10px 12px; vertical-align: top; font-size: 13px; }
 td.c-num { text-align: center; color: var(--faint); font-size: 12px; font-variant-numeric: tabular-nums; }
 td.c-emp { font-weight: 600; font-size: 13px; }
-td.c-status, td.c-obs, td.c-nom { vertical-align: middle; }
+td.c-status, td.c-obs, td.c-nom, td.c-fech { vertical-align: middle; }
 
 /* EDITABLE CELLS */
 [contenteditable] {
@@ -256,9 +256,9 @@ td.c-data { font-variant-numeric: tabular-nums; font-size: 12px; color: var(--mu
 
 <div class="summary">
   <span>Total: <strong id="s-total">0</strong> empreendimentos</span>
-  <span class="summary-pill pill-age"><span id="s-age">0</span> AGE</span>
-  <span class="summary-pill pill-ago"><span id="s-ago">0</span> AGO</span>
-  <span class="summary-pill pill-std"><span id="s-std">0</span> STD</span>
+  <span class="summary-pill pill-ok"><span id="s-ok">0</span> OK</span>
+  <span class="summary-pill pill-nok"><span id="s-nok">0</span> Não OK</span>
+  <span class="summary-pill pill-pend"><span id="s-pend">0</span> sem marcação</span>
   <span class="edit-hint" id="edit-hint">Clique em "Editar linhas" para modificar qualquer campo</span>
 </div>
 
@@ -275,6 +275,7 @@ td.c-data { font-variant-numeric: tabular-nums; font-size: 12px; color: var(--mu
       <th class="c-status" style="text-align:center">Status</th>
       <th class="c-obs"   style="text-align:center"><span class="col-label">Pasta</span>Obsoleto</th>
       <th class="c-nom"   style="text-align:center"><span class="col-label">Padronização</span>Nomenclatura</th>
+      <th class="c-fech"  style="text-align:center"><span class="col-label">Assembleia</span>Fechamento Grupo</th>
     </tr>
   </thead>
   <tbody id="tbody"></tbody>
@@ -381,6 +382,7 @@ function buildRow(d, i) {
   const savedSt   = load(key+'_st',   '');
   const savedObs  = load(key+'_obs',  '');
   const savedNom  = load(key+'_nom',  '');
+  const savedFech = load(key+'_fech', '');
 
   const empDisp  = savedEmp  || emp;
   const mtgDisp  = savedMtg  || meeting;
@@ -462,6 +464,12 @@ function buildRow(d, i) {
       <div class="status-group">
         <button class="st-btn st-ok${okA(savedNom)}"   title="OK"     onclick="setSt(${i},'${key}','nom','ok')"   id="nom-ok-${i}">✓</button>
         <button class="st-btn st-nok${nokA(savedNom)}" title="Não OK" onclick="setSt(${i},'${key}','nom','nok')"  id="nom-nok-${i}">✕</button>
+      </div>
+    </td>
+    <td class="c-fech">
+      <div class="status-group">
+        <button class="st-btn st-ok${okA(savedFech)}"   title="OK"     onclick="setSt(${i},'${key}','fech','ok')"   id="fech-ok-${i}">✓</button>
+        <button class="st-btn st-nok${nokA(savedFech)}" title="Não OK" onclick="setSt(${i},'${key}','fech','nok')"  id="fech-nok-${i}">✕</button>
       </div>
     </td>
   </tr>`;
@@ -569,7 +577,7 @@ function clearImg(i, key) {
     <span class="crono-icon">📷</span><span>Cronograma</span><span style="font-size:10px;opacity:.7">clique ou cole</span>`;
 }
 
-// ─── STATUS TOGGLE (generic — suffix = 'st', 'obs', 'nom') ───────────────────
+// ─── STATUS TOGGLE (generic — suffix = 'st', 'obs', 'nom', 'fech') ──────────
 function setSt(i, key, sfx, val) {
   const cur = load(key+'_'+sfx, '');
   const next = cur===val ? '' : val;
@@ -577,18 +585,16 @@ function setSt(i, key, sfx, val) {
   const prefix = sfx==='st' ? '' : sfx+'-';
   document.getElementById(prefix+'ok-'+i).className  = 'st-btn st-ok'  + (next==='ok'  ? ' active' : '');
   document.getElementById(prefix+'nok-'+i).className = 'st-btn st-nok' + (next==='nok' ? ' active' : '');
+  if (sfx === 'st') updateSummary();
 }
 
 // ─── SUMMARY ─────────────────────────────────────────────────────────────────
 function updateSummary() {
-  let age=0,ago=0,std=0;
-  document.querySelectorAll('#tbody .badge').forEach(b => {
-    const t = b.textContent.trim().replace(' ↻','');
-    if (t==='AGE') age++; else if (t==='STD') std++; else ago++;
-  });
-  document.getElementById('s-age').textContent = age;
-  document.getElementById('s-ago').textContent = ago;
-  document.getElementById('s-std').textContent = std;
+  const ok  = document.querySelectorAll('#tbody td.c-status .st-ok.active').length;
+  const nok = document.querySelectorAll('#tbody td.c-status .st-nok.active').length;
+  document.getElementById('s-ok').textContent   = ok;
+  document.getElementById('s-nok').textContent  = nok;
+  document.getElementById('s-pend').textContent = DATA.length - ok - nok;
 }
 
 // ─── PASTE HANDLER ────────────────────────────────────────────────────────────
